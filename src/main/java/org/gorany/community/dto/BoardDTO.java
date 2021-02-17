@@ -17,6 +17,7 @@ public class BoardDTO {
     private String title;
     private String content;
     private String writer;
+    private int replyCnt;
 
     private boolean anonymous;
 

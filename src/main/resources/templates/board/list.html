@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+        <th:block th:fragment="content">
+            <h1 class="mt-4">Board List Page
+                <span>
+                    <a th:href="@{/board/register}">
+                        <button class="btn btn-outline-primary">REGISTER</button>
+                    </a>
+                </span>
+            </h1>
+
+            <table class="table table-primary">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">TITLE</th>
+                    <th scope="col">WRITER</th>
+                    <th scope="col">REGDATE</th>
+                </thead>
+                <tbody>
+                    <tr th:each="dto:${list.dtoList}">
+                        <th>[[${dto.bno}]]</th>
+                        <td><a th:href="@{/board/read(bno=${dto.bno}, page=${list.page}, size=${list.size})}"><b>[[${dto.title}]] ---- [</b><b th:text="${dto.replyCnt}"></b>]</a></td>
+                        <td>[[${dto.writer}]]</small></td>
+                        <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ul class="pagination h-100 justify-content-center align-items-center">
+                <li class="page-item" th:if="${list.prev}">
+                    <a class="page-link" th:href="@{/board/list(page=${list.start - 1}, size=${list.size})}" tabindex="-1">PREV</a>
+                </li>
+
+                <li th:class=" 'page-item ' + ${list.page == page?'active':''} " th:each="page:${list.pageList}">
+                    <a class="page-link" th:href="@{/board/list(page=${page}, size=${list.size})}">[[${page}]]</a>
+                </li>
+
+                <li class="page-item" th:if="${list.next}">
+                    <a class="page-link" th:href="@{/board/list(page=${list.end + 1}, size=${list.size})}" tabindex="-1">NEXT</a>
+                </li>
+            </ul>
+        </th:block>
+    </th:block>
+</html>

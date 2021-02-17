@@ -14,9 +14,16 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
             "LEFT JOIN B.writer W")
     List<Object[]> getList();*/
 
-    @Query("SELECT B, W FROM Board B LEFT JOIN B.writer W")
+    @Query(value = "SELECT B, W, COUNT(R) FROM Board B " +
+            "LEFT JOIN B.writer W " +
+            "LEFT JOIN Reply R ON R.board = B " +
+            "GROUP BY B",
+    countQuery = "SELECT COUNT(B) FROM Board B")
     Page<Object[]> getListWithPaging(Pageable pageable);
 
-    @Query("SELECT B, W FROM Board B LEFT JOIN B.writer W WHERE B.bno = :bno")
+    @Query("SELECT B, W, COUNT(R) FROM Board B " +
+            "LEFT OUTER JOIN B.writer W " +
+            "LEFT OUTER JOIN Reply R ON R.board = B " +
+            "WHERE B.bno = :bno")
     Object readBoard(@Param("bno") int bno);
 }

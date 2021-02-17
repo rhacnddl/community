@@ -9,6 +9,7 @@ import org.gorany.community.dto.PageResultDTO;
 import org.gorany.community.entity.Board;
 import org.gorany.community.entity.Member;
 import org.gorany.community.repository.BoardRepository;
+import org.gorany.community.repository.ReplyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class BoardServiceImpl implements BoardService{
 
     @NonNull
     private BoardRepository boardRepository;
+
+    @NonNull
+    private ReplyRepository replyRepository;
 
     @Override
     public int register(BoardDTO boardDTO) {
@@ -45,13 +49,15 @@ public class BoardServiceImpl implements BoardService{
         Object[] arr = (Object[]) obj;
         log.info("@BoardService, read : " + Arrays.toString(arr));
 
-        return entityToDto((Board) arr[0], (Member) arr[1]);
+        return entityToDto((Board) arr[0], (Member) arr[1], (Long) arr[2]);
     }
 
     @Override
+    @Transactional
     public void remove(int bno) {
         log.info("@BoardService, remove : " + bno);
 
+        replyRepository.deleteByBno(bno);
         boardRepository.deleteById(bno);
     }
 
@@ -76,7 +82,7 @@ public class BoardServiceImpl implements BoardService{
     public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO) {
 
         log.info("@BoardService, PageRequestDTO : " + pageRequestDTO);
-        Function<Object[], BoardDTO> function = (entity -> entityToDto((Board) entity[0], (Member) entity[1]));
+        Function<Object[], BoardDTO> function = (entity -> entityToDto((Board) entity[0], (Member) entity[1], (Long) entity[2]));
 
         Page<Object[]> result = boardRepository.getListWithPaging(pageRequestDTO.getPageable(Sort.by("bno").descending()));
 

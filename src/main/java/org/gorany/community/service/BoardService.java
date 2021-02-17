@@ -14,7 +14,7 @@ public interface BoardService {
     void remove(int bno);
     void modify(BoardDTO boardDTO);
 
-    default BoardDTO entityToDto(Board board, Member member){
+    default BoardDTO entityToDto(Board board, Member member, Long replyCnt){
 
         BoardDTO dto = BoardDTO.builder()
                 .bno(board.getBno())
@@ -24,6 +24,7 @@ public interface BoardService {
                 .anonymous(board.isAnonymous())
                 .regDate(board.getRegDate())
                 .modDate(board.getModDate())
+                .replyCnt(replyCnt.intValue())
                 .build();
 
         return dto;

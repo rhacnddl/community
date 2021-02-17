@@ -39,7 +39,7 @@ public class BoardRepositoryTest {
     /*@Test
     public void getListWithPagingTest(){
 
-        Pageable pageable = PageRequest.of(0, 15, Sort.by("bno").descending());
+        Pageable pageable = PageRequest.of(9, 15, Sort.by("bno").descending());
 
         Page<Object[]> temp = repo.getListWithPaging(pageable);
 
@@ -50,11 +50,12 @@ public class BoardRepositoryTest {
     @Test
     public void readBoardTest(){
 
-        int bno = 10;
+        int bno = 4;
 
         Object temp = repo.readBoard(bno);
-        Object[] obj = (Object[]) temp;
 
-        System.out.println(Arrays.toString(obj));
+        Object[] res = (Object[]) temp;
+
+        System.out.println(Arrays.toString(res));
     }
 }
