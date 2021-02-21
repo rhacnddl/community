@@ -18,6 +18,7 @@ public class Reply extends DateEntity{
 
     private String text;
     private String replyer;
+    private boolean anonymous;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;

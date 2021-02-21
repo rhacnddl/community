@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">
+    <th:block th:fragment="content">
+        <h1 class="mt-4">Board Read Page</h1>
+
+        <form th:action="@{/board/modify}" th:method="post">
+
+            <input type="hidden" name="page" th:value="${requestDTO.page}">
+            <input type="hidden" name="size" th:value="${requestDTO.size}">
+            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
+            <input type="hidden" name="type" th:value="${requestDTO.type}">
+
+            <div class="form-group">
+                <label>Board No.</label>
+                <input type="text" name="bno" th:value="${dto.bno}" class="form-control" readonly style="font-weight: bold">
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" th:value="${dto.title}" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea type="text" name="content" class="form-control" >[[${dto.content}]]</textarea>
+            </div>
+            <div class="form-group">
+                <label>Writer</label>
+                <input type="text" name="writer" th:value="${dto.anonymous}? '익명' : ${dto.writer}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>RegDate</label>
+                <input type="text" th:value="${#temporals.format(dto.regDate, 'yyyy / MM / dd')}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>ModDate</label>
+                <input type="text" th:value="${#temporals.format(dto.modDate, 'yyyy / MM / dd')}" class="form-control" readonly>
+            </div>
+            <div>
+                <label>Anonymous</label>
+                <input type="checkbox" name="anonymous" class="form-control" th:checked="${dto.anonymous}">
+            </div>
+        </form>
+
+        <button class="btn btn-outline-info modifyBtn">CONFIRM</button>
+        <button class="btn btn-outline-danger removeBtn">REMOVE</button>
+        <button class="btn btn-outline-warning cancleBtn">CANCLE</button>
+
+        <script th:inline="javascript">
+            $(document).ready(function(){
+                const actionForm = $("form");
+                const bno = $("input[name='bno']");
+
+                const page = $("input[name='page']");
+                const size = $("input[name='size']");
+                const keyword = $("input[name='keyword']");
+                const type = $("input[name='type']");
+
+                $(".modifyBtn").on("click", (e) => {
+
+                    if(confirm(bno.val() + " 번 게시글을 수정하시겠습니까?"))
+                        actionForm.submit();
+                })
+                $(".removeBtn").on("click", (e) => {
+
+                    actionForm.attr("/board/remove");
+                    actionForm.submit();
+                });
+                $(".cancleBtn").on("click", (e) => {
+
+
+
+                    actionForm.empty();
+                    actionForm.attr("action", "/board/read");
+                    actionForm.attr("method", "get");
+
+                    actionForm.append(bno, page, size, keyword, type);
+                    actionForm.submit();
+                });
+            });
+        </script>
+    </th:block>
+</th:block>
+</html>

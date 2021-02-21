@@ -47,7 +47,7 @@ public class BoardRepositoryTest {
             System.out.println(Arrays.toString(obj));
         });
     }*/
-    @Test
+    /*@Test
     public void readBoardTest(){
 
         int bno = 4;
@@ -57,5 +57,13 @@ public class BoardRepositoryTest {
         Object[] res = (Object[]) temp;
 
         System.out.println(Arrays.toString(res));
+    }*/
+    @Test
+    public void SearchBoardRepoTest(){
+
+        //repo.search1();
+        Page<Object[]> result = repo.searchPage("t", "글", PageRequest.of(0, 10, Sort.by("bno").descending()));
+
+        result.get().forEach(System.out::println);
     }
 }

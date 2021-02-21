@@ -84,7 +84,9 @@ public class BoardServiceImpl implements BoardService{
         log.info("@BoardService, PageRequestDTO : " + pageRequestDTO);
         Function<Object[], BoardDTO> function = (entity -> entityToDto((Board) entity[0], (Member) entity[1], (Long) entity[2]));
 
-        Page<Object[]> result = boardRepository.getListWithPaging(pageRequestDTO.getPageable(Sort.by("bno").descending()));
+        //Page<Object[]> result = boardRepository.getListWithPaging(pageRequestDTO.getPageable(Sort.by("bno").descending()));
+        Page<Object[]> result = boardRepository.searchPage(pageRequestDTO.getType(), pageRequestDTO.getKeyword(), pageRequestDTO.getPageable(Sort.by("bno").descending()));
+        result.stream().forEach(item->log.info(item));
 
         return new PageResultDTO<>(result, function);
     }

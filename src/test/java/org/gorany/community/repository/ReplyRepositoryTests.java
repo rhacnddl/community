@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+
 
 @SpringBootTest
 public class ReplyRepositoryTests {
@@ -33,7 +35,7 @@ public class ReplyRepositoryTests {
             repository.save(reply);
         });
     }*/
-    @Test
+/*    @Test
     @Transactional
     public void readReply1(){
         Optional<Reply> result = repository.findById(101);
@@ -41,5 +43,11 @@ public class ReplyRepositoryTests {
 
         System.out.println(reply);
         System.out.println(reply.getBoard());
+    }*/
+    @Test
+    public void getRepliesTest(){
+
+        List<Reply> result = repository.getRepliesByBoardOrderByRno(Board.builder().bno(3).build());
+        result.forEach(System.out::println);
     }
 }

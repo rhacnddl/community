@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReplyDTO {
 
-    private int rno;
+    private int rno, bno;
 
     private String text, replyer;
+    private boolean anonymous;
     private LocalDateTime regDate, modDate;
 }

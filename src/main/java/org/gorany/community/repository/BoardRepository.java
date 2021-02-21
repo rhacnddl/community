@@ -1,6 +1,7 @@
 package org.gorany.community.repository;
 
 import org.gorany.community.entity.Board;
+import org.gorany.community.repository.search.SearchBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<Board, Integer> {
+public interface BoardRepository extends JpaRepository<Board, Integer>, SearchBoardRepository {
     /*@Query("SELECT B, W FROM Board B " +
             "LEFT JOIN B.writer W")
     List<Object[]> getList();*/

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">
+    <th:block th:fragment="content">
+        <h1 class="mt-4">Board Read Page</h1>
+        <div class="form-group">
+            <label>Board No.</label>
+            <input type="text" name="bno" th:value="${dto.bno}" class="form-control" readonly style="font-weight: bold">
+        </div>
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" th:value="${dto.title}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Content</label>
+            <textarea type="text" name="content" class="form-control" readonly>[[${dto.content}]]</textarea>
+        </div>
+        <div class="form-group">
+            <label>Writer</label>
+            <input type="text" name="writer" th:value="${dto.anonymous}? '익명' : ${dto.writer}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>RegDate</label>
+            <input type="text" th:value="${#temporals.format(dto.regDate, 'yyyy / MM / dd')}" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>ModDate</label>
+            <input type="text" th:value="${#temporals.format(dto.modDate, 'yyyy / MM / dd')}" class="form-control" readonly>
+        </div>
+
+        <a th:href="@{/board/modify(bno=${dto.bno}, page=${requestDTO.page}, size=${requestDTO.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}">
+            <button class="btn btn-outline-primary">MODIFY</button>
+        </a>
+        <a th:href="@{/board/list(page=${requestDTO.page}, size=${requestDTO.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}">
+            <button class="btn btn-outline-secondary">LIST</button>
+        </a>
+
+        <div class="mt-4">
+            <h5><span class="badge badge-secondary replyCount">Reply Count [[${dto.replyCnt}]]</span></h5>
+        </div>
+        <div class="list-group replyList">
+
+        </div>
+
+
+        <script th:inline="javascript">
+            $(document).ready(function () {
+
+                const bno = [[${dto.bno}]];
+                const listGroup = $(".replyList");
+
+                //날짜 처리를 위한 함수
+                let formatTime = function (str){
+                    const date = new Date(str);
+
+                    return `${date.getFullYear()}/
+                    ${date.getMonth() + 1}/
+                    ${date.getDate()}
+                    ${date.getHours()} :
+                    ${date.getSeconds()}`;
+                }
+
+                //특정한 게시글의 댓글을 처리하는 함수
+                let loadJSONData = () => {
+                    $.getJSON(
+                        `/replies/board/${bno}`, (result) => {
+                            console.log(result);
+
+                            let str = '';
+
+                            $(".replyCount").html(" Reply Count " + result.length);
+
+                            $.each(result, (idx, reply) => {
+                                console.log(reply);
+
+                                let writer;
+                                if(reply.anonymous)
+                                    writer = '익명';
+                                else
+                                    writer = reply.replyer;
+
+                                str += `<div class="card-body" data-rno="${reply.rno}"><b>${reply.rno}</b>
+                                        <h5 class="card-title">${reply.text}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">${writer}</h6>
+                                        <p class="card-text">${formatTime(reply.regDate)}</p>
+                                        </div>`;
+                            })
+                            listGroup.html(str);
+                        }
+                    )
+                }
+
+                $(".replyCount").on("click", (e) => {
+                    loadJSONData();
+                })
+            });
+        </script>
+    </th:block>
+</th:block>
+</html>
