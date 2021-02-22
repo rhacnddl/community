@@ -35,7 +35,40 @@
             <button class="btn btn-outline-secondary">LIST</button>
         </a>
 
+        <!-- Modal -->
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reply Window</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="text">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="replyer">
+                            <input type="hidden" name="rno">
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger replyRemove">REMOVE</button>
+                            <button class="btn btn-warning replyModify">MODIFY</button>
+                            <button class="btn btn-primary replySave">SAVE</button>
+                            <button class="btn btn-secondary replyClose" data-dismiss="modal">CLOSE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+
+
+
         <div class="mt-4">
+            <h5><span class="badgd badge-info addReply">ADD REPLY</span></h5>
             <h5><span class="badge badge-secondary replyCount">Reply Count [[${dto.replyCnt}]]</span></h5>
         </div>
         <div class="list-group replyList">
