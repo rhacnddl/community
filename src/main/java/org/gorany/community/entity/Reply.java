@@ -26,4 +26,5 @@ public class Reply extends DateEntity{
     public void changeText(String text){
         this.text = text;
     }
+    public void changeAnonymous(boolean anonymous){ this.anonymous = anonymous;}
 }

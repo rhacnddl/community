@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="file" name="uploadFiles" multiple>
+    <button class="uploadBtn">Upload</button>
+
+    <div class="uploadResult">
+
+    </div>
+
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script>
+        $(".uploadBtn").on("click", (e) => {
+            let formData = new FormData();
+            const inputFile = $("input[name='uploadFiles']");
+
+            const files = inputFile[0].files;
+
+            for(let i=0; i<files.length; i++){
+                console.log(files[i]);
+                formData.append("uploadFiles", files[i]);
+            }
+
+            $.ajax({
+                url:'/upload',
+                contentType:false,
+                processData:false,
+                data:formData,
+                method:'post',
+                dataType:'json',
+                success: (result) => {
+
+                    showUploadResult(result);
+                },
+                error: (jqXHR, status, errorThrows) => {
+                    console.log(status);
+                }
+            })//.$.ajax
+        });
+
+        const showUploadResult = (files) => {
+
+            const uploadResult = $(".uploadResult");
+
+            for(let i=0; i<files.length; i++){
+                uploadResult.append(`<img src="/img/attach.png">`);
+            }
+        }
+    </script>
+</body>
+</html>

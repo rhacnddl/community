@@ -47,7 +47,10 @@ public class ReplyServiceImpl implements ReplyService{
 
         log.info("#ReplyService, modify " + replyDTO);
 
-        Reply reply = dtoToEntity(replyDTO);
+        Reply reply = repository.getOne(replyDTO.getRno());
+        reply.changeAnonymous(replyDTO.isAnonymous());
+        reply.changeText(replyDTO.getText());
+
         repository.save(reply);
     }
 

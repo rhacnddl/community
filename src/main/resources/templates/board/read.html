@@ -47,11 +47,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>Reply</label>
                             <input class="form-control" type="text" name="text">
                         </div>
                         <div class="form-group">
+                            <label>Replyer</label>
                             <input type="text" class="form-control" name="replyer">
                             <input type="hidden" name="rno">
+                        </div>
+                        <div>
+                            <label>Anonymous</label>
+                            <input type="checkbox" name="anonymous">
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger replyRemove">REMOVE</button>
@@ -68,7 +74,7 @@
 
 
         <div class="mt-4">
-            <h5><span class="badgd badge-info addReply">ADD REPLY</span></h5>
+            <h5><span class="badge badge-info addReply">ADD REPLY</span></h5>
             <h5><span class="badge badge-secondary replyCount">Reply Count [[${dto.replyCnt}]]</span></h5>
         </div>
         <div class="list-group replyList">
@@ -81,6 +87,116 @@
 
                 const bno = [[${dto.bno}]];
                 const listGroup = $(".replyList");
+                const modal = $(".modal");
+
+                //특정 댓글 클릭 시 이벤트
+                $(".replyList").on("click", ".card-body", function(e) {
+
+                    let rno = $(this).data("rno");
+                    let text = $(this).find(".card-title").html();
+                    let replyer = $(this).find(".card-subtitle").html();
+
+                    console.log("rno: " + rno + ", text:" + text +", replyer: " + replyer);
+
+                    $("input[name='text']").val(text);
+                    $("input[name='replyer']").val(replyer).attr("readonly", "readonly");
+                    if(replyer == "익명")
+                        $("input:checkbox[name='anonymous']").prop("checked", true);
+                    else
+                        $("input:checkbox[name='anonymous']").prop("checked", false);
+
+                    $(".modal .btn").hide('hide');
+                    $(".replyRemove, .replyModify, .replyClose").show('show');
+                    modal.show('show');
+
+                    //Reply Modify Click
+                    $(".replyModify").on("click", (e) => {
+
+                        let reply = {
+                            rno:rno,
+                            bno:bno,
+                            text:$("input[name='text']").val(),
+                            anonymous:$("input:checkbox[name='anonymous']").is(":checked") == true
+                        };
+
+                        console.log(reply);
+
+                        if(confirm(`${rno}번 댓글을 수정하시겠습니까?`)){
+                            $.ajax({
+                                url:`/replies/${rno}`,
+                                method: 'put',
+                                data: JSON.stringify(reply),
+                                contentType: 'application/json; charset=utf-8',
+                                success: (msg) => {
+                                    if(msg === 'success'){
+                                        alert(`${rno}번 댓글이 수정되었습니다.`);
+                                        modal.hide('hide');
+                                        loadJSONData();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    //REMOVE Reply Click
+                    $(".replyRemove").on("click", (e) => {
+
+                        if(confirm(`${rno}번 댓글을 삭제하시겠습니까?`)) {
+                            $.ajax({
+                                url:`/replies/${rno}`,
+                                method: 'delete',
+                                success: (msg) => {
+                                    if(msg === 'success'){
+                                        alert(`${rno}번 댓글이 삭제되었습니다.`);
+                                        modal.hide('hide');
+                                        loadJSONData();
+                                    }
+                                }
+                            });
+                        }
+                    })
+                });
+
+                //ADD REPLY Click
+                $(".addReply").on("click", (e) => {
+
+                    $(".modal .btn").hide();
+                    $(".replySave, .replyClose").show()
+                    $("input[name='text'], input[name='replyer']").val('');
+                    $("input:checkbox[name='anonymous']").prop("checked", false);
+                    modal.show('show');
+                })
+                //Modal Close Button Click
+                $(".replyClose, .close").on("click", (e) => {
+                    $("input[name='text'], input[name='replyer']").val('');
+                    modal.hide('hide');
+                })
+
+                //Reply Save Button Click
+                $(".replySave").on("click", (e) => {
+
+                    let reply = {
+                        bno:bno,
+                        text:$("input[name='text']").val(),
+                        replyer:$("input[name='replyer']").val(),
+                        anonymous:$("input:checkbox[name='anonymous']").is(":checked") == true
+                    };
+
+                    console.log(reply);
+
+                    $.ajax({
+                        url:'/replies/',
+                        method:'post',
+                        data:JSON.stringify(reply),
+                        contentType:'application/json; charset=utf-8',
+                        dataType:'json',
+                        success:(rno) => {
+                            console.log("rno : " + rno);
+                            alert(rno + "번 댓글이 작성되었습니다.");
+                            modal.hide('hide');
+                            loadJSONData();
+                    }
+                    });
+                });
 
                 //날짜 처리를 위한 함수
                 let formatTime = function (str){
