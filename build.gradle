@@ -37,6 +37,9 @@ dependencies {
     //testImplementation 'org.springframework.security:spring-security-test'
     compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time'
     implementation 'com.querydsl:querydsl-jpa'
+    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
+
 }
 
 test {

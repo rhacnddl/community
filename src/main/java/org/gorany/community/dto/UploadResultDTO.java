@@ -3,6 +3,7 @@ package org.gorany.community.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -24,5 +25,9 @@ public class UploadResultDTO implements Serializable {
             e.printStackTrace();
         }
         return null;
+    }
+    public String getThumbnailURL() throws IOException {
+
+        return URLEncoder.encode(folderPath + "/s_" + uuid + "_" + fileName, "UTF-8");
     }
 }

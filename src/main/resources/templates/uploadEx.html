@@ -5,51 +5,103 @@
     <title>Title</title>
 </head>
 <body>
+<style>
+    .uploadResult{
+        width: 100%;
+        background-color: white;
+        margin-top: 10px;
+    }
+    .uploadResult ul{
+        display: flex;
+        flex-flow: row;
+        justify-items: center;
+        align-items: center;
+        vertical-align: top;
+        overflow: auto;
+    }
+    .uploadResult ul li{
+        list-style: none;
+        padding: 10px;
+        margin-left: 2em;
+    }
+    .uploadResult ul li img{
+        width: 100px;
+    }
+</style>
     <input type="file" name="uploadFiles" multiple>
     <button class="uploadBtn">Upload</button>
 
     <div class="uploadResult">
+        <ul>
 
+        </ul>
     </div>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script>
-        $(".uploadBtn").on("click", (e) => {
-            let formData = new FormData();
-            const inputFile = $("input[name='uploadFiles']");
+        $(document).ready(function (){
 
-            const files = inputFile[0].files;
+            $(".uploadBtn").on("click", (e) => {
+                let formData = new FormData();
+                const inputFile = $("input[name='uploadFiles']");
 
-            for(let i=0; i<files.length; i++){
-                console.log(files[i]);
-                formData.append("uploadFiles", files[i]);
-            }
+                const files = inputFile[0].files;
 
-            $.ajax({
-                url:'/upload',
-                contentType:false,
-                processData:false,
-                data:formData,
-                method:'post',
-                dataType:'json',
-                success: (result) => {
-
-                    showUploadResult(result);
-                },
-                error: (jqXHR, status, errorThrows) => {
-                    console.log(status);
+                for(let i=0; i<files.length; i++){
+                    console.log(files[i]);
+                    formData.append("uploadFiles", files[i]);
                 }
-            })//.$.ajax
-        });
 
-        const showUploadResult = (files) => {
+                $.ajax({
+                    url:'/upload',
+                    contentType:false,
+                    processData:false,
+                    data:formData,
+                    method:'post',
+                    dataType:'json',
+                    success: (result) => {
 
-            const uploadResult = $(".uploadResult");
+                        showUploadResult(result);
+                    },
+                    error: (jqXHR, status, errorThrows) => {
+                        console.log(status);
+                    }
+                })//.$.ajax
+            });
 
-            for(let i=0; i<files.length; i++){
-                uploadResult.append(`<img src="/img/attach.png">`);
+            const showUploadResult = (files) => {
+
+                const uploadResult = $(".uploadResult ul");
+
+                for(let i=0; i<files.length; i++){
+                    console.log(files[i]);
+
+                    let src = files[i].image? encodeURIComponent(files[i].thumbnailURL):encodeURIComponent("attach.png");
+                    /*console.log(src);*/
+                    uploadResult.append(`<li><img src="/display?fileName=${src}">${files[i].fileName}
+                <button class="removeBtn" data-fileName='${files[i].folderPath + "\\" + files[i].uuid + "_" + files[i].fileName}'}>X</button>
+                </li>`);
+                }
             }
-        }
+
+            $(".uploadResult").on("click", ".removeBtn", function(e) {
+
+                let fileName = $(this).data("filename");
+                let liTag = $(this).closest("li");
+
+                console.log("filename : " + fileName);
+
+                $.ajax({
+                    url: `/removeFile`,
+                    method: 'post',
+                    data: {fileName:fileName},
+                    success: (result) =>{
+                        if(result)
+                            liTag.remove();
+                    }
+                })
+            })
+        });
     </script>
 </body>
 </html>
