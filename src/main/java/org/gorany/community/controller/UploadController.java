@@ -3,6 +3,7 @@ package org.gorany.community.controller;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.apache.coyote.Response;
+import org.gorany.community.dto.UploadDTO;
 import org.gorany.community.dto.UploadResultDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -37,6 +38,20 @@ public class UploadController {
 
     @Value("${org.gorany.upload.path}")
     private String uploadPath;
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> download(String fileName){
+
+        ResponseEntity<byte[]> result = null;
+
+        try {
+            String originFileName = URLDecoder.decode(fileName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
     @PostMapping(value = "/removeFile")
     public ResponseEntity<Boolean> removeFile(String fileName){
@@ -81,9 +96,9 @@ public class UploadController {
     }
 
     @PostMapping(value = "/upload")
-    public ResponseEntity<List<UploadResultDTO>> uploadFile(MultipartFile[] uploadFiles){
+    public ResponseEntity<List<UploadDTO>> uploadFile(MultipartFile[] uploadFiles){
 
-        List<UploadResultDTO> list = new ArrayList<>();
+        List<UploadDTO> list = new ArrayList<>();
 
         for(MultipartFile file : uploadFiles){
 
@@ -112,7 +127,7 @@ public class UploadController {
                     Thumbnailator.createThumbnail(savePath.toFile(), thumnail, 100, 100);
                 }
 
-                list.add(new UploadResultDTO(fileName, uuid, folderPath, isImage));
+                list.add(new UploadDTO(fileName, uuid, folderPath, isImage));
             } catch (IOException e) {
                 e.printStackTrace();
             }

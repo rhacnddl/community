@@ -1,25 +1,21 @@
 package org.gorany.community.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 @Data
 @AllArgsConstructor
-@Builder
-@NoArgsConstructor
-public class UploadResultDTO implements Serializable {
+public class UploadDTO {
 
     private String fileName;
     private String uuid;
     private String folderPath;
 
     private boolean image;
-
-    private int bno;
 
     public String getImageURL(){
         try {
@@ -32,8 +28,5 @@ public class UploadResultDTO implements Serializable {
     public String getThumbnailURL() throws IOException {
 
         return URLEncoder.encode(folderPath + "/s_" + uuid + "_" + fileName, "UTF-8");
-    }
-    public String getAttachURL() throws IOException{
-        return URLEncoder.encode("attach.png", "UTF-8");
     }
 }

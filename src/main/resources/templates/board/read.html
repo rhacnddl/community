@@ -2,6 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">
     <th:block th:fragment="content">
+        <style>
+            .uploadResult{
+                width: 100%;
+                background-color: white;
+                margin-top: 10px;
+            }
+            .uploadResult ul{
+                display: flex;
+                flex-flow: row;
+                justify-items: center;
+                align-items: center;
+                vertical-align: top;
+                overflow: auto;
+            }
+            .uploadResult ul li{
+                list-style: none;
+                padding: 10px;
+                margin-left: 2em;
+            }
+            .uploadResult ul li img{
+                width: 100px;
+            }
+        </style>
         <h1 class="mt-4">Board Read Page</h1>
         <div class="form-group">
             <label>Board No.</label>
@@ -26,6 +49,15 @@
         <div class="form-group">
             <label>ModDate</label>
             <input type="text" th:value="${#temporals.format(dto.modDate, 'yyyy / MM / dd')}" class="form-control" readonly>
+        </div>
+
+        <div class="uploadResult">
+            <ul>
+                <li th:each="uploadDTO : ${dto.uploadList}">
+                    <img th:if="${uploadDTO.image}" th:src="|/display?fileName=${uploadDTO.getThumbnailURL()}">
+                    <img th:if="${!uploadDTO.image}" th:src="|/display?fileName=${uploadDTO.getAttachURL()}">
+                </li>
+            </ul>
         </div>
 
         <a th:href="@{/board/modify(bno=${dto.bno}, page=${requestDTO.page}, size=${requestDTO.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}">

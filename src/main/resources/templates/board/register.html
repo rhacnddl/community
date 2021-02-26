@@ -2,6 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic :: setContent(~{this :: content})}">
     <th:block th:fragment="content">
+        <style>
+            .uploadResult{
+                width: 100%;
+                background-color: white;
+                margin-top: 10px;
+            }
+            .uploadResult ul{
+                display: flex;
+                flex-flow: row;
+                justify-items: center;
+                align-items: center;
+                vertical-align: top;
+                overflow: auto;
+            }
+            .uploadResult ul li{
+                list-style: none;
+                padding: 10px;
+                margin-left: 2em;
+            }
+            .uploadResult ul li img{
+                width: 100px;
+            }
+        </style>
         <h1 class="mt-4">Board Register Page</h1>
         <form th:action="@{/board/register}" th:method="post">
             <div class="form-group">
@@ -20,9 +43,133 @@
                 <label>Anonymous</label>
                 <input type="checkbox" name="anonymous">
             </div>
+
+            <div class="form-group fileForm">
+                <label>Upload Files</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input files" id="fileInput" multiple>
+                    <label class="custom-file-label" data-browse="Browse"></label>
+                </div>
+            </div>
+            <div class="box">
+
+            </div>
+
             <button class="btn btn-primary">SUBMIT</button>
         </form>
+        <div class="uploadResult">
+            <ul>
+
+            </ul>
+        </div>
     </th:block>
 </th:block>
 
+<script th:inline="javascript">
+    $(document).ready(function (){
+
+        $(".btn-primary").on("click", function (e) {
+            e.preventDefault();
+
+            let str = "";
+
+            $(".uploadResult li").each((i, file) => {
+                let target = $(file);
+
+                str += `<input type="hidden" name="uploadList[${i}].fileName" value="${target.data('name')}">`;
+                str += `<input type="hidden" name="uploadList[${i}].folderPath" value="${target.data('path')}">`;
+                str += `<input type="hidden" name="uploadList[${i}].uuid" value="${target.data('uuid')}">`;
+                str += `<input type="hidden" name="uploadList[${i}].image" value="${target.data('image')}">`;
+            });
+
+            $(".box").html(str);
+            $("form").submit();
+        });
+
+        const showUploadResult = (files) => {
+
+            const uploadUL = $(".uploadResult ul");
+            let str = "";
+
+            for(let i=0; i<files.length; i++){
+                console.log(files[i]);
+
+                let src = files[i].image? files[i].thumbnailURL:"attach.png";
+
+                str += `<li data-name="${files[i].fileName}" data-path="${files[i].folderPath}" data-uuid="${files[i].uuid}" data-image="${files[i].image}">
+                        <div>
+                        <button type="button" data-file="${files[i].imageURL}" class="btn-warning btn-sm">X</button><br>
+                        <img src="/display?fileName=${src}">
+                        </div>
+                        </li>`;
+
+                /*let src = files[i].image? encodeURIComponent(files[i].thumbnailURL):encodeURIComponent("attach.png");
+                uploadResult.append(`<li><img src="/display?fileName=${src}">${files[i].fileName}
+                <button class="removeBtn" data-fileName='${files[i].folderPath + "\\" + files[i].uuid + "_" + files[i].fileName}'}>X</button>
+                </li>`);*/
+            }
+            uploadUL.append(str);
+        }
+
+        $(".custom-file-input").on("change", function(){
+
+            let fileName = $(this).val().split("\\").pop();
+            console.log(fileName);
+
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+
+            let formData = new FormData();
+            let inputFile = $(this);
+            let files = inputFile[0].files;
+
+            let appended = false;
+
+            for(let i=0; i<files.length; i++){
+                console.log(files[i]);
+                formData.append("uploadFiles", files[i]);
+                appended = true;
+            }
+
+            if(!appended) return;
+
+            for(let value of formData.values())
+                console.log(value);
+
+            $.ajax({
+                url:'/upload',
+                contentType:false,
+                processData:false,
+                data:formData,
+                method:'post',
+                dataType:'json',
+                success: (result) => {
+
+                    showUploadResult(result);
+                },
+                error: (jqXHR, status, errorThrows) => {
+                    console.log(status);
+                }
+            })//.$.ajax
+        });
+
+        $(".uploadResult").on("click", ".removeBtn", function(e) {
+
+            let fileName = $(this).data("filename");
+            let liTag = $(this).closest("li");
+
+            console.log("filename : " + fileName);
+
+            $.ajax({
+                url: `/removeFile`,
+                method: 'post',
+                data: {fileName:fileName},
+                success: (result) =>{
+                    if(result)
+                        liTag.remove();
+                }
+            });
+        });
+
+    });
+</script>
 </html>

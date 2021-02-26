@@ -3,6 +3,8 @@ package org.gorany.community.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +19,10 @@ public class BoardDTO {
     private String title;
     private String content;
     private String writer;
+
+    @Builder.Default
+    private List<UploadResultDTO> uploadList = new ArrayList<>();
+
     private int replyCnt;
 
     private boolean anonymous;
