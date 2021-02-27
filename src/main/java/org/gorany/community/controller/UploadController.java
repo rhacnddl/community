@@ -5,22 +5,22 @@ import net.coobird.thumbnailator.Thumbnailator;
 import org.apache.coyote.Response;
 import org.gorany.community.dto.UploadDTO;
 import org.gorany.community.dto.UploadResultDTO;
+import org.hibernate.result.Output;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -39,14 +39,81 @@ public class UploadController {
     @Value("${org.gorany.upload.path}")
     private String uploadPath;
 
-    @GetMapping("/download")
-    public ResponseEntity<byte[]> download(String fileName){
-
-        ResponseEntity<byte[]> result = null;
+/*    @GetMapping(value = "/download")
+    public void download(String fileName, HttpServletResponse response, HttpServletRequest request){
 
         try {
             String originFileName = URLDecoder.decode(fileName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+            String onlyFileName = originFileName.substring(originFileName.lastIndexOf("_") + 1);
+
+            log.info("@UploadController, download " + originFileName);
+            log.info("@UploadController, onlyFileName: " + onlyFileName);
+
+            File file = new File(uploadPath, originFileName);
+
+            if(file.exists()) {
+                String agent = request.getHeader("User-Agent");
+                log.info(agent);
+
+                //브라우저별 한글파일 명 처리
+                if(agent.contains("Trident"))//Internet Explore
+                    onlyFileName = URLEncoder.encode(onlyFileName, "UTF-8").replaceAll("\\+", " ");
+                else if(agent.contains("Edge")) //Micro Edge
+                    onlyFileName = URLEncoder.encode(onlyFileName, "UTF-8");
+                else //Chrome
+                    onlyFileName = new String(onlyFileName.getBytes("UTF-8"), "ISO-8859-1");
+                //브라우저별 한글파일 명 처리
+
+                response.setHeader("Content-Type", "application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment; filename=" + onlyFileName);
+
+                InputStream is = new FileInputStream(file);
+                OutputStream os = response.getOutputStream();
+
+                int length;
+                byte[] buffer = new byte[1024];
+
+                while( (length = is.read(buffer)) != -1){
+                    os.write(buffer, 0, length);
+                }
+
+                os.flush();
+                os.close();
+                is.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> download(String fileName, @RequestHeader("User-Agent") String agent){
+        ResponseEntity<Resource> result = null;
+
+        try {
+            String originFileName = URLDecoder.decode(fileName, "UTF-8");
+            log.info("@UploadController, download " + originFileName);
+
+            Resource file = new FileSystemResource(uploadPath + File.separator + originFileName);
+
+            if(!file.exists()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            //브라우저별 한글파일 명 처리
+            String onlyFileName = originFileName.substring(originFileName.lastIndexOf("_") + 1);
+
+            if(agent.contains("Trident"))//Internet Explore
+                onlyFileName = URLEncoder.encode(onlyFileName, "UTF-8").replaceAll("\\+", " ");
+            else if(agent.contains("Edge")) //Micro Edge
+                onlyFileName = URLEncoder.encode(onlyFileName, "UTF-8");
+            else //Chrome
+                onlyFileName = new String(onlyFileName.getBytes("UTF-8"), "ISO-8859-1");
+            //브라우저별 한글파일 명 처리
+
+            HttpHeaders header = new HttpHeaders();
+            header.add("Content-Disposition", "attachment; filename=" + onlyFileName);
+
+            result = new ResponseEntity<>(file, header, HttpStatus.OK);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

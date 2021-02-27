@@ -105,6 +105,16 @@ public class BoardServiceImpl implements BoardService{
 
         log.info("@BoardService, modify " + boardDTO);
 
+        //Upload File의 수정 (모두 삭제(DB 상에서만 삭제이고, 실제 로컬 저장소에는 그대로 있음) -> 다시 추가)
+        uploadRepository.deleteByBno(boardDTO.getBno());
+
+        List<UploadResult> uploadList = (List<UploadResult>) dtoToEntity(boardDTO).get("uploadList");
+        if(uploadList != null && uploadList.size() > 0)
+            uploadList.forEach(upload -> {
+                uploadRepository.save(upload);
+            });
+
+        //Board의 내용만 수정
         Board board = boardRepository.getOne(boardDTO.getBno());
 
         if(board != null){

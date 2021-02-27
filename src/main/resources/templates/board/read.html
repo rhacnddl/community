@@ -54,8 +54,12 @@
         <div class="uploadResult">
             <ul>
                 <li th:each="uploadDTO : ${dto.uploadList}">
+                    <div class="uploadDiv" th:data-url="${uploadDTO.getImageURL()}">
+                        <a th:href="@{/download(fileName=${uploadDTO.getImageURL()})}">[[${uploadDTO.fileName}]]</a>
+                    </div>
                     <img th:if="${uploadDTO.image}" th:src="|/display?fileName=${uploadDTO.getThumbnailURL()}">
                     <img th:if="${!uploadDTO.image}" th:src="|/display?fileName=${uploadDTO.getAttachURL()}">
+
                 </li>
             </ul>
         </div>
@@ -120,6 +124,20 @@
                 const bno = [[${dto.bno}]];
                 const listGroup = $(".replyList");
                 const modal = $(".modal");
+
+                //특정 파일 목록 클릭 시 이벤트(다운로드)
+                /*$(".uploadDiv").on("click", function (e){
+                    let url = $(this).data("url");
+                    console.log(url);
+
+                    $.ajax({
+                        url:`/download?fileName=${url}`,
+                        method:'get',
+                        success: (result) => {
+                            console.log(result);
+                        }
+                    })
+                });*/
 
                 //특정 댓글 클릭 시 이벤트
                 $(".replyList").on("click", ".card-body", function(e) {
