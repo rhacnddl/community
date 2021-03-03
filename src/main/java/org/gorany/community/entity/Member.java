@@ -1,9 +1,14 @@
 package org.gorany.community.entity;
 
 import lombok.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,4 +24,12 @@ public class Member extends DateEntity{
     private String name;
     private String password;
     private String profile;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<MemberRole> roleSet = new HashSet<>();
+
+    public void setRole(MemberRole role){
+        roleSet.add(role);
+    }
 }
