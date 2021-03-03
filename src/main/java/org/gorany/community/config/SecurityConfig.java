@@ -24,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //인가/인증에 문제시 로그인 화면
         http.formLogin();
+        http.logout();
     }
 
     @Override
