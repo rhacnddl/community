@@ -18,23 +18,23 @@ public class ReplyRepositoryTests {
     @Autowired
     private ReplyRepository repository;
 
-    /*@Test
+    @Test
     public void insertTest(){
 
-        IntStream.rangeClosed(1, 100).forEach(i->{
-            int bno = (int)(Math.random() * 100) + 3;
+        IntStream.rangeClosed(1, 300).forEach(i->{
+            int bno = i % 100 + 1;
 
             Board board = Board.builder().bno(bno).build();
 
             Reply reply = Reply.builder()
-                    .text("Reply : ..." + i)
-                    .replyer("guest")
+                    .text("Dummy Reply [" + i + "]")
+                    .replyer("gorany" + (i % 100 + 1))
                     .board(board)
                     .build();
 
             repository.save(reply);
         });
-    }*/
+    }
 /*    @Test
     @Transactional
     public void readReply1(){

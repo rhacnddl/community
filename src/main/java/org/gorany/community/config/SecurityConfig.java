@@ -20,17 +20,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/board/list").hasRole("USER");
+        http.csrf().disable();
+
+        http.authorizeRequests().antMatchers("/board/**").authenticated()
+                                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                                .anyRequest().permitAll();
 
         //인가/인증에 문제시 로그인 화면
         http.formLogin();
         http.logout();
     }
 
-    @Override
+/*    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
         auth.inMemoryAuthentication().withUser("user1").
                 password("$2a$10$ukBFQHHAYVqw1dBCoKzou.77mK/FFmFudor1/qBXzsO.mJMj3Ffka").roles("USER");
-    }
+    }*/
 }

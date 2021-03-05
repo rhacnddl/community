@@ -19,12 +19,12 @@ public class BoardRepositoryTest {
     @Autowired
     private BoardRepository repo;
 
-    /*@Test
+    @Test
     public void insertBoardTest(){
 
         IntStream.range(1, 101).forEach(i->{
 
-            int idx = i % 30 + 1;
+            int idx = i;
 
             Board board = Board.builder()
                     .title(i+" 번 게시글")
@@ -35,7 +35,7 @@ public class BoardRepositoryTest {
 
             repo.save(board);
         });
-    }*/
+    }
     /*@Test
     public void getListWithPagingTest(){
 
