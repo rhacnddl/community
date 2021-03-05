@@ -37,7 +37,7 @@
             </div>
             <div class="form-group">
                 <label>Writer</label>
-                <input type="text" name="writer" class="form-control">
+                <input type="text" name="writer" class="form-control" readonly th:value="${#authentication.name}">
             </div>
             <div class="form-group">
                 <label>Anonymous</label>

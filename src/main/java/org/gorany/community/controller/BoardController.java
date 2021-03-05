@@ -3,10 +3,13 @@ package org.gorany.community.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gorany.community.dto.BoardDTO;
+import org.gorany.community.dto.MemberDTO;
 import org.gorany.community.dto.PageRequestDTO;
 import org.gorany.community.dto.PageResultDTO;
 import org.gorany.community.entity.Board;
 import org.gorany.community.service.BoardService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping(value = "/board")
+@PreAuthorize("isAuthenticated()")
 public class BoardController {
 
     private final BoardService service;
@@ -67,7 +71,9 @@ public class BoardController {
         model.addAttribute("dto", boardDTO);
     }
     @PostMapping(value = "/modify")
-    public String modify(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, BoardDTO boardDTO, RedirectAttributes rttr){
+    @PreAuthorize("#member != null && #member.username eq #boardDTO.writer")
+    public String modify(@ModelAttribute("requestDTO") PageRequestDTO requestDTO, BoardDTO boardDTO, RedirectAttributes rttr,
+                         @AuthenticationPrincipal MemberDTO member){
 
         log.info("@BoardController, Modify Post : " + boardDTO);
 
@@ -82,7 +88,9 @@ public class BoardController {
         return "redirect:/board/read";
     }
     @PostMapping(value = "/remove")
-    public String remove(int bno, RedirectAttributes rttr){
+    @PreAuthorize("#member != null && #member.username eq #boardDTO.writer")
+    public String remove(int bno, RedirectAttributes rttr,
+                         @AuthenticationPrincipal MemberDTO member){
 
         log.info("@BoardController, remove : " + bno);
 
