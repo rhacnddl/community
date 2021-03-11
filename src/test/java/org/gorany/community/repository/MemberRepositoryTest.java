@@ -20,6 +20,22 @@ public class MemberRepositoryTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Test
+    public void insertTest(){
+
+        IntStream.rangeClosed(50, 100).forEach(i->{
+            Member member = Member.builder()
+                    .account("gorany" + i)
+                    .password(passwordEncoder.encode("12345"))
+                    .name(i+"번째 고라니")
+                    .build();
+
+            if(i >= 90) member.setRole(MemberRole.ADMIN);
+            else member.setRole(MemberRole.USER);
+
+            repo.save(member);
+        });
+    }
     /*@Test
     public void insertMemberTest(){
 

@@ -41,7 +41,7 @@
             </form>
             <!-- 검색 창 -->
 
-            <table class="table table-primary">
+            <table class="table table-secondary table-responsive-sm">
                 <thead>
                     <th scope="col">#</th>
                     <th scope="col">TITLE</th>
@@ -71,6 +71,17 @@
                     <a class="page-link" th:href="@{/board/list(page=${list.end + 1}, size=${list.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}" tabindex="-1">NEXT</a>
                 </li>
             </ul>
+
+<script th:inline="javascript">
+    $(document).ready(function(){
+
+        $(".btn-clear").on("click", (e) => {
+            $("#searchForm").empty();
+            $("#searchForm").append("<input type='hidden' value='1' name='page'>");
+            $("form").submit();
+        })
+    })
+</script>
         </th:block>
     </th:block>
 </html>
