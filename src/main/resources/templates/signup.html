@@ -1,35 +1,105 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<th:block th:replace="~{layout/basic :: setContent( ~{this :: content} )}">
-    <th:block th:fragment="content">
-        <h1>Sign-up Page</h1>
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+<style>
+    html{
+        height: 100%;
+    }
+    body{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
-        <div>
+    header{
+        background-color: orange;
+        border: 5px solid black;
+
+        flex-grow: 1;
+
+        position: sticky;
+        top: 0;
+    }
+    main{
+        border: 5px dashed black;
+
+        flex-grow: 8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: white url("/img/guinea.png") no-repeat center;
+        background-size: contain;
+    }
+        main > nav{
+            background-color: pink;
+            height: 100%;
+        }
+        main > .main-container{
+            background-color: skyblue;
+
+            --padding: 50px;
+        }
+    footer{
+        background-color: yellow;
+        border: 5px solid black;
+
+        flex-grow: 1;
+    }
+</style>
+</head>
+<body>
+    <header>
+        <h1>Sign-up Page</h1>
+    </header>
+
+    <main>
+        <!--<nav>
+            <h1>Quick Menu</h1>
+
+            <a th:href="@{#}">Home</a>
+        </nav>-->
+        <div class="main-container">
             <form th:action="@{/signup}" method="post">
-                <div class="form-group">
+                <div class="">
                     <label>ID</label>
-                    <input class="form-control" type="text" placeholder="Enter your ID" name="account">
+                    <input class="" type="text" placeholder="Enter your ID" name="account">
                 </div>
                 <div>
                     <label>Name</label>
-                    <input class="form-control" type="text" name="name">
+                    <input class="" type="text" name="name">
                 </div>
                 <div>
                     <label>Password</label>
-                    <input class="form-control" type="password" name="password">
+                    <input class="" type="password" name="password">
                 </div>
                 <div>
                     <label>Password 확인</label>
-                    <input class="form-control" type="password" id="password-confirm">
+                    <input class="" id="password-confirm">
                 </div>
                 <div>
-                    <button class="btn btn-primary btn-submit">Submit</button>
+                    <button class="btn-submit">Sign up</button>
                 </div>
             </form>
         </div>
+    </main>
 
+    <footer>
+        <h1>footer</h1>
+    </footer>
+
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:inline="javascript">
     $(document).ready(function (){
+
+        const msg = [[${msg}]];
+        if(msg != null)
+            alert(msg);
 
         $(".btn-submit").on("click", (e) => {
 
@@ -45,6 +115,5 @@
         });
     });
 </script>
-    </th:block>
-</th:block>
+</body>
 </html>

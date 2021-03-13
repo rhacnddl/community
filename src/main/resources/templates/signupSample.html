@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:replace="~{layout/basic :: setContent( ~{this :: content} )}">
+    <th:block th:fragment="content">
+        <h1>Sign-up Page</h1>
+
+        <div>
+            <form th:action="@{/signup}" method="post">
+                <div class="form-group">
+                    <label>ID</label>
+                    <input class="form-control" type="text" placeholder="Enter your ID" name="account">
+                </div>
+                <div>
+                    <label>Name</label>
+                    <input class="form-control" type="text" name="name">
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input class="form-control" type="password" name="password">
+                </div>
+                <div>
+                    <label>Password 확인</label>
+                    <input class="form-control" type="password" id="password-confirm">
+                </div>
+                <div>
+                    <button class="btn btn-primary btn-submit">Submit</button>
+                </div>
+            </form>
+        </div>
+
+<script th:inline="javascript">
+    $(document).ready(function (){
+
+        $(".btn-submit").on("click", (e) => {
+
+            e.preventDefault();
+
+            let pw = $("input[name='password']").val();
+            let pwConfirm = $("#password-confirm").val();
+
+            if(pw === pwConfirm)
+                $("form").submit();
+            else
+                alert("비밀번호를 다시 확인해주세요.");
+        });
+    });
+</script>
+    </th:block>
+</th:block>
+</html>

@@ -8,6 +8,8 @@ import org.gorany.community.repository.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor
@@ -18,7 +20,11 @@ public class MemberServiceImpl implements MemberService{
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void signup(String account, String password, String name) {
+    public int signup(String account, String password, String name) {
+
+        Optional<Member> check = repository.findByAccount(account);
+
+        if(check.isPresent()) return 0;
 
         Member member = Member.builder()
                 .account(account)
@@ -31,5 +37,6 @@ public class MemberServiceImpl implements MemberService{
         log.info("@MemberService, " + member);
 
         repository.save(member);
+        return 1;
     }
 }

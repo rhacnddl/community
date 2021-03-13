@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //인가/인증에 문제시 로그인 화면
         http.rememberMe().tokenValiditySeconds(60 * 60 * 24 * 3).userDetailsService(userDetailsService); //3days
-        http.formLogin();
+        http.formLogin().loginPage("/login").loginProcessingUrl("/login_post").defaultSuccessUrl("/index");
         http.logout();
     }
 

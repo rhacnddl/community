@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <h1 class="mt-4">Board List Page
+            <span>
+                    <a th:href="@{/admin/board/register}">
+                        <button class="btn btn-outline-primary">REGISTER</button>
+                    </a>
+                </span>
+        </h1>
+
+        <!-- 검색 창 -->
+        <form th:action="@{/admin/board/list}" th:id="searchForm">
+            <div class="input-group">
+                <input type="hidden" name="page" value="1">
+
+                <div class="input-group-prepend">
+                    <select class="custom-select" name="type">
+                        <option value="" th:selected="${requestDTO.type == null}">------</option>
+                        <option th:value="t" th:selected="${requestDTO.type == 't'}">제목</option>
+                        <option th:value="c" th:selected="${requestDTO.type == 'c'}">내용</option>
+                        <option th:value="w" th:selected="${requestDTO.type == 'w'}">작성자</option>
+                        <option th:value="tc" th:selected="${requestDTO.type == 'tc'}">제목+내용</option>
+                        <option th:value="cw" th:selected="${requestDTO.type == 'cw'}">내용+작성자</option>
+                        <option th:value="tw" th:selected="${requestDTO.type == 'tw'}">제목+작성자</option>
+                        <option th:value="tcw" th:selected="${requestDTO.type == 'tcw'}">제목+내용+작성자</option>
+                    </select>
+                    <select class="custom-select" name="size">
+                        <option th:value="10" th:selected="${requestDTO.size == 10}">10개씩</option>
+                        <option th:value="15" th:selected="${requestDTO.size == 15}">15개씩</option>
+                        <option th:value="20" th:selected="${requestDTO.size == 20}">20개씩</option>
+                    </select>
+                </div>
+                <input type="text" class="form-control" name="keyword" th:value="${requestDTO.keyword}">
+                <div class="input-group-append" id="button-addon4">
+                    <button class="btn btn-outline-secondary btn-search">Search</button>
+                    <button class="btn btn-outline-info btn-clear">Clear</button>
+                </div>
+            </div>
+        </form>
+        <!-- 검색 창 -->
+
+        <table class="table table-secondary table-responsive-sm">
+            <thead>
+            <th scope="col">#</th>
+            <th scope="col">TITLE</th>
+            <th scope="col">WRITER</th>
+            <th scope="col">REGDATE</th>
+            </thead>
+            <tbody>
+            <tr th:each="dto:${list.dtoList}">
+                <th>[[${dto.bno}]]</th>
+                <td><a th:href="@{/admin/board/read(bno=${dto.bno}, page=${list.page}, size=${list.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}"><b>[[${dto.title}]] ---- [</b><b th:text="${dto.replyCnt}"></b>]</a></td>
+                <td th:text="${dto.anonymous}? '익명' : ${dto.writer}"></td>
+                <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <ul class="pagination h-100 justify-content-center align-items-center">
+            <li class="page-item" th:if="${list.prev}">
+                <a class="page-link" th:href="@{/admin/board/list(page=${list.start - 1}, size=${list.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}" tabindex="-1">PREV</a>
+            </li>
+
+            <li th:class=" 'page-item ' + ${list.page == page?'active':''} " th:each="page:${list.pageList}">
+                <a class="page-link" th:href="@{/admin/board/list(page=${page}, size=${list.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}">[[${page}]]</a>
+            </li>
+
+            <li class="page-item" th:if="${list.next}">
+                <a class="page-link" th:href="@{/admin/board/list(page=${list.end + 1}, size=${list.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}" tabindex="-1">NEXT</a>
+            </li>
+        </ul>
+
+        <script th:inline="javascript">
+            $(document).ready(function(){
+
+                $(".btn-clear").on("click", (e) => {
+                    $("#searchForm").empty();
+                    $("#searchForm").append("<input type='hidden' value='1' name='page'>");
+                    $("form").submit();
+                })
+            })
+        </script>
+    </th:block>
+</th:block>
+</html>
