@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -20,7 +21,7 @@ public class MemberRepositoryTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Test
+    /*@Test
     public void insertTest(){
 
         IntStream.rangeClosed(50, 100).forEach(i->{
@@ -35,7 +36,7 @@ public class MemberRepositoryTest {
 
             repo.save(member);
         });
-    }
+    }*/
     /*@Test
     public void insertMemberTest(){
 
@@ -67,12 +68,19 @@ public class MemberRepositoryTest {
         });
     }*/
 
-    @Test
+    /*@Test
     public void getMember(){
 
         Optional<Member> result = repo.findByAccount("gorany1");
         Member m = result.get();
 
         System.out.println(m.toString());
+    }*/
+    @Test
+    public void getMemberListTest(){
+
+        List<Member> list = repo.getMemberList();
+
+        list.stream().forEach(System.out::println);
     }
 }

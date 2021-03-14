@@ -30,6 +30,7 @@ public class Member extends DateEntity{
     private Set<MemberRole> roleSet = new HashSet<>();
 
     public void setRole(MemberRole role){
+        roleSet.clear();
         roleSet.add(role);
     }
 }

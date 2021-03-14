@@ -2,12 +2,12 @@ package org.gorany.community.dto;
 
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.gorany.community.entity.MemberRole;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 
 @Getter
 @Setter
@@ -19,10 +19,12 @@ public class MemberDTO extends User {
     private String password;
     private String name;
     private String profile;
+    private int role;
 
     public MemberDTO(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.account = username;
         this.password = password;
     }
+
 }
