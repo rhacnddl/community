@@ -3,11 +3,15 @@ package org.gorany.community.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gorany.community.dto.MemberDTO;
+import org.gorany.community.dto.ProfileDTO;
 import org.gorany.community.entity.Member;
 import org.gorany.community.entity.MemberRole;
+import org.gorany.community.entity.Profile;
 import org.gorany.community.repository.MemberRepository;
+import org.gorany.community.repository.ProfileRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
+    private final ProfileRepository profileRepository;
     private final MemberRepository repository;
 
     private final PasswordEncoder passwordEncoder;
@@ -72,5 +77,51 @@ public class MemberServiceImpl implements MemberService{
         member.setRole(memberRole);
 
         repository.save(member);
+    }
+
+    @Override
+    @Transactional
+    public void modify(String account, String name, String profile, ProfileDTO profileDTO) {
+
+        log.info("@MemberService, modify");
+
+        Optional<Member> memberOptional = repository.findByAccount(account);
+
+        if(memberOptional.isEmpty()) return;
+
+        Member member = memberOptional.get();
+        member.changeProfile(profile);
+        member.changeName(name);
+        //member.changePassword(passwordEncoder.encode(memberDTO.getPassword())); //비밀번호 재설정은 아직
+
+        if(profileDTO != null) {
+            profileRepository.deleteByAccount(account);
+            Profile prof = Profile.builder()
+                    .uuid(profileDTO.getUuid())
+                    .fileName(profileDTO.getFileName())
+                    .path(profileDTO.getPath())
+                    .member(member)
+                    .build();
+
+            log.info(prof);
+            profileRepository.save(prof);
+        }
+
+        log.info(member);
+        repository.save(member);
+    }
+
+    @Override
+    public MemberDTO get(String account) {
+
+        log.info("@MemberService, get(" + account + ")");
+
+        Optional<Member> optional = repository.findByAccount(account);
+
+        if (optional.isEmpty()) return null;
+
+        Member member = optional.get();
+
+        return entityToDTO(member);
     }
 }

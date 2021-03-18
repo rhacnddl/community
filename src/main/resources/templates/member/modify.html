@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/member/modify" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Profile Icon</label>
+            <input type="file" name="multipartFile">
+        </div>
+        <div>
+            <label>Account</label>
+            <input type="text" th:value="${dto.account}" name="account" readonly>
+        </div>
+        <div>
+            <label>Name</label>
+            <input type="text" th:value="${dto.name}" name="name">
+        </div>
+        <!--<div>
+            <label>비밀번호 재설정</label>
+            <input type="password" name="tmp-pw">
+        </div>
+        <div>
+            <label>비밀번호 확인</label>
+            <input type="password" name="tmp-pw-check">
+        </div>-->
+        <div>
+            <label>Profile</label>
+            <textarea rows="6" cols="30" th:name="profile">[[${dto.profile}]]</textarea>
+        </div>
+        <div>
+            <button>Submit</button>
+        </div>
+    </form>
+</body>
+</html>

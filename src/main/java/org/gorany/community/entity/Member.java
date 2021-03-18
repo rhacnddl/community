@@ -33,4 +33,14 @@ public class Member extends DateEntity{
         roleSet.clear();
         roleSet.add(role);
     }
+
+    public void changeName(String name){
+        this.name = name;
+    }
+    public void changePassword(String password){
+        this.password = password;
+    }
+    public void changeProfile(String profile){
+        this.profile = profile;
+    }
 }

@@ -1,6 +1,7 @@
 package org.gorany.community.service;
 
 import org.gorany.community.dto.MemberDTO;
+import org.gorany.community.dto.ProfileDTO;
 import org.gorany.community.entity.Member;
 import org.gorany.community.entity.MemberRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +14,8 @@ public interface MemberService {
     int signup(String account, String password, String name);
     List<MemberDTO> getList();
     void changeRole(String account, int role);
+    void modify(String account, String name, String profile, ProfileDTO profileDTO);
+    MemberDTO get(String account);
 
     default MemberDTO entityToDTO(Member member){
 
