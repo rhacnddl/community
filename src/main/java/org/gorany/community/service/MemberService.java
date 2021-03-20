@@ -4,6 +4,7 @@ import org.gorany.community.dto.MemberDTO;
 import org.gorany.community.dto.ProfileDTO;
 import org.gorany.community.entity.Member;
 import org.gorany.community.entity.MemberRole;
+import org.gorany.community.entity.Profile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface MemberService {
 
         memberDTO.setName(member.getName());
         memberDTO.setProfile(member.getProfile());
-
+        //memberDTO.setProfileDTO();
 
         return memberDTO;
     }

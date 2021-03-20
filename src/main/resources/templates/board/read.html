@@ -25,6 +25,9 @@
                 width: 100px;
             }
         </style>
+
+        <input th:with="account=${#authentication.name}" th:type="hidden" name="account" th:value="${account}">
+
         <h1 class="mt-4">Board Read Page</h1>
         <div class="form-group">
             <label>Board No.</label>
@@ -64,9 +67,6 @@
             </ul>
         </div>
 
-        <div th:with="writer=${#authentication.name}" th:text="${writer}">
-            <h1 th:if="${writer == dto.writer}">![[${writer}]]</h1>
-        </div>
         <a th:if="${#authentication.name == dto.writer}" th:href="@{/board/modify(bno=${dto.bno}, page=${requestDTO.page}, size=${requestDTO.size}, keyword=${requestDTO.keyword}, type=${requestDTO.type})}">
             <button class="btn btn-outline-primary">MODIFY</button>
         </a>
@@ -118,11 +118,14 @@
         </div>
         <div class="list-group replyList">
 
-        </div>   
+        </div>
 
 
         <script th:inline="javascript">
             $(document).ready(function () {
+
+                const account = $("input[name='account']").val();
+                console.log(account);
 
                 const bno = [[${dto.bno}]];
                 const listGroup = $(".replyList");
@@ -149,64 +152,67 @@
                     let text = $(this).find(".card-title").html();
                     let replyer = $(this).find(".card-subtitle").html();
 
+
                     console.log("rno: " + rno + ", text:" + text +", replyer: " + replyer);
 
-                    $("input[name='text']").val(text);
-                    $("input[name='replyer']").val(replyer).attr("readonly", "readonly");
-                    if(replyer == "익명")
-                        $("input:checkbox[name='anonymous']").prop("checked", true);
-                    else
-                        $("input:checkbox[name='anonymous']").prop("checked", false);
+                    if(account == replyer){
+                        $("input[name='text']").val(text);
+                        $("input[name='replyer']").val(replyer).attr("readonly", "readonly");
+                        if(replyer == "익명")
+                            $("input:checkbox[name='anonymous']").prop("checked", true);
+                        else
+                            $("input:checkbox[name='anonymous']").prop("checked", false);
 
-                    $(".modal .btn").hide('hide');
-                    $(".replyRemove, .replyModify, .replyClose").show('show');
-                    modal.show('show');
+                        $(".modal .btn").hide('hide');
+                        $(".replyRemove, .replyModify, .replyClose").show('show');
+                        modal.show('show');
 
-                    //Reply Modify Click
-                    $(".replyModify").on("click", (e) => {
+                        //Reply Modify Click
+                        $(".replyModify").on("click", (e) => {
 
-                        let reply = {
-                            rno:rno,
-                            bno:bno,
-                            text:$("input[name='text']").val(),
-                            anonymous:$("input:checkbox[name='anonymous']").is(":checked") == true
-                        };
+                            let reply = {
+                                rno:rno,
+                                bno:bno,
+                                text:$("input[name='text']").val(),
+                                anonymous:$("input:checkbox[name='anonymous']").is(":checked") == true
+                            };
 
-                        console.log(reply);
+                            console.log(reply);
 
-                        if(confirm(`${rno}번 댓글을 수정하시겠습니까?`)){
-                            $.ajax({
-                                url:`/replies/${rno}`,
-                                method: 'put',
-                                data: JSON.stringify(reply),
-                                contentType: 'application/json; charset=utf-8',
-                                success: (msg) => {
-                                    if(msg === 'success'){
-                                        alert(`${rno}번 댓글이 수정되었습니다.`);
-                                        modal.hide('hide');
-                                        loadJSONData();
+                            if(confirm(`${rno}번 댓글을 수정하시겠습니까?`)){
+                                $.ajax({
+                                    url:`/replies/${rno}`,
+                                    method: 'put',
+                                    data: JSON.stringify(reply),
+                                    contentType: 'application/json; charset=utf-8',
+                                    success: (msg) => {
+                                        if(msg === 'success'){
+                                            alert(`${rno}번 댓글이 수정되었습니다.`);
+                                            modal.hide('hide');
+                                            loadJSONData();
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    });
-                    //REMOVE Reply Click
-                    $(".replyRemove").on("click", (e) => {
+                                });
+                            }
+                        });
+                        //REMOVE Reply Click
+                        $(".replyRemove").on("click", (e) => {
 
-                        if(confirm(`${rno}번 댓글을 삭제하시겠습니까?`)) {
-                            $.ajax({
-                                url:`/replies/${rno}`,
-                                method: 'delete',
-                                success: (msg) => {
-                                    if(msg === 'success'){
-                                        alert(`${rno}번 댓글이 삭제되었습니다.`);
-                                        modal.hide('hide');
-                                        loadJSONData();
+                            if(confirm(`${rno}번 댓글을 삭제하시겠습니까?`)) {
+                                $.ajax({
+                                    url:`/replies/${rno}`,
+                                    method: 'delete',
+                                    success: (msg) => {
+                                        if(msg === 'success'){
+                                            alert(`${rno}번 댓글이 삭제되었습니다.`);
+                                            modal.hide('hide');
+                                            loadJSONData();
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    })
+                                });
+                            }
+                        })
+                    }
                 });
 
                 //ADD REPLY Click

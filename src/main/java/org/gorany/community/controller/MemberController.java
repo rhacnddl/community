@@ -2,6 +2,7 @@ package org.gorany.community.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.gorany.community.dto.MemberDTO;
 import org.gorany.community.dto.ProfileDTO;
 import org.gorany.community.service.MemberService;

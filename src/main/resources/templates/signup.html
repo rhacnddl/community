@@ -80,12 +80,14 @@
                 </div>
                 <div>
                     <label>Password 확인</label>
-                    <input class="" id="password-confirm">
+                    <input class="" type="password" id="password-confirm">
                 </div>
                 <div>
                     <button class="btn-submit">Sign up</button>
+                    <button class="btn-cancle">Cancle</button>
                 </div>
             </form>
+
         </div>
     </main>
 
@@ -113,6 +115,12 @@
             else
                 alert("비밀번호를 다시 확인해주세요.");
         });
+
+        $(".btn-cancle").on("click", (e) => {
+            e.preventDefault();
+
+            window.location = "login";
+        })
     });
 </script>
 </body>

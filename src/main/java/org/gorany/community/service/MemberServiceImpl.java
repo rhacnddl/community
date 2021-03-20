@@ -122,6 +122,7 @@ public class MemberServiceImpl implements MemberService{
 
         Member member = optional.get();
 
+
         return entityToDTO(member);
     }
 }
