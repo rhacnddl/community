@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="setContent(content)">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html{
+            height: 100%;
+        }
+        body{
+            height: 100%;
+            margin : 0;
+        }
+        #container{
+            height: 100%;
+
+            display: grid;
+
+            grid-template-columns: 1fr;
+            grid-template-rows: 70px 70px 1fr 70px;
+            grid-template-areas:
+            "header"
+            "aside"
+            "main"
+            "footer";
+
+        }
+        #header{
+            background-color: red;
+
+            grid-area: header;
+
+            top:0px;
+            position: sticky;
+        }
+        #aside{
+            background-color: orange;
+
+            grid-area: aside;
+        }
+        #main{
+            background-color: yellow;
+
+            grid-area: main;
+        }
+        #footer{
+            background-color: green;
+
+            grid-area: footer;
+        }
+
+        nav{
+            display: flex;
+        }
+            nav > ul{
+                display: flex;
+                list-style: none;
+            }
+
+        @media screen and (min-width: 500px){
+            #container{
+                grid-template-columns: 150px 1fr;
+                grid-template-rows: 100px 1fr 100px;
+                grid-template-areas:
+        "header header"
+        "aside main"
+        "footer footer";
+            }
+            #container > #aside{
+
+            }
+
+            nav > ul{
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <h1 sec:authentication="principal.username"></h1>
+    </div>
+    <div id="aside">
+        <nav>
+            <ul>
+                <li><a th:href="@{../index}">HOME</a></li>
+                <li><a th:href="@{../board/list}">Board</a></li>
+            </ul>
+
+
+        </nav>
+    </div>
+    <div id="main">
+        <th:block th:replace="${content}">
+
+        </th:block>
+    </div>
+    <div id="footer">
+
+    </div>
+</div>
+</body>
+</th:block>
+</html>

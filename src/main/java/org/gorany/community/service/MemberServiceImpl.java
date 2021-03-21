@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService{
     public List<MemberDTO> getList() {
 
         List<MemberDTO> list = repository.getMemberList().stream()
-                .map(member -> entityToDTO(member))
+                .map(member -> entityToDTO(member, null))
                 .collect(Collectors.toList());
 
         log.info("#MemberService, getList");
@@ -108,6 +108,7 @@ public class MemberServiceImpl implements MemberService{
         }
 
         log.info(member);
+        log.info(profile);
         repository.save(member);
     }
 
@@ -122,7 +123,12 @@ public class MemberServiceImpl implements MemberService{
 
         Member member = optional.get();
 
+        Optional<Profile> optionalProfile = profileRepository.findByMember(member);
+        Profile profileImage = null;
 
-        return entityToDTO(member);
+        if(optionalProfile.isPresent())
+            profileImage = optionalProfile.get();
+
+        return entityToDTO(member, profileImage);
     }
 }

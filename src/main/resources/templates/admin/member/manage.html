@@ -92,30 +92,9 @@
 
     </div>
 </footer>
-<!--<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>name</th>
-            <th>role</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="member : ${list}">
-            <td><input type="text" name="account" th:value="${member.account}" readonly></td>
-            <td><input type="text" name="name" th:value="${member.name}" readonly></td>
-            <td>
-                <select name="role" id="roles" th:data-account="${member.account}">
-                    <option th:selected="${member.role == -1}"></option>
-                    <option value="1" th:selected="${member.role == 1}">ADMIN</option>
-                    <option value="0" th:selected="${member.role == 0}">USER</option>
-                </select>
-            </td>
-        </tr>
-    </tbody>
-</table>-->
 
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+
+<script th:src="@{/vendor/jquery/jquery.js}"></script>
 <script th:inline="javascript">
     $(document).ready(function(){
         $("tbody").on("change", "#roles", function () {

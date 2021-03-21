@@ -18,7 +18,7 @@ public interface MemberService {
     void modify(String account, String name, String profile, ProfileDTO profileDTO);
     MemberDTO get(String account);
 
-    default MemberDTO entityToDTO(Member member){
+    default MemberDTO entityToDTO(Member member, Profile profileImage){
 
         MemberDTO memberDTO = new MemberDTO(member.getAccount(),
                 member.getPassword(),
@@ -34,10 +34,12 @@ public interface MemberService {
             else
                 memberDTO.setRole(-1);
 
-
+        if(profileImage != null){
+            ProfileDTO profileDTO = new ProfileDTO(profileImage.getUuid(), profileImage.getFileName(), profileImage.getPath(), member.getAccount());
+            memberDTO.setProfileDTO(profileDTO);
+        }
         memberDTO.setName(member.getName());
         memberDTO.setProfile(member.getProfile());
-        //memberDTO.setProfileDTO();
 
         return memberDTO;
     }

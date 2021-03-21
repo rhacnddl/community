@@ -7,6 +7,8 @@ import org.gorany.community.dto.MemberDTO;
 import org.gorany.community.dto.ProfileDTO;
 import org.gorany.community.service.MemberService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -30,6 +32,7 @@ import java.util.UUID;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping(value = "/member")
+@PreAuthorize("isAuthenticated()")
 public class MemberController {
 
     @Value("${org.gorany.upload.path}")
@@ -38,6 +41,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping(value = "/modify")
+    @PreAuthorize("principal.username == #account")
     public ModelAndView modifyGet(String account){
 
         ModelAndView mv = new ModelAndView("member/modify");
@@ -67,7 +71,11 @@ public class MemberController {
 
             Path path = Paths.get(fullName);
 
+            log.info("@MemberController, modify POST, 프로필 이미지 사진 존재함." + profileDTO);
+
             try {
+                String thumbnailName = uploadPath + File.separator + datePath + File.separator + "s_" +  uuid + "_" + filename;
+                Thumbnailator.createThumbnail(multipartFile.getInputStream(), new FileOutputStream(thumbnailName), 100, 100);
                 FileCopyUtils.copy(multipartFile.getInputStream(), new FileOutputStream(path.toFile()));
             } catch (IOException e) {
                 e.printStackTrace();
