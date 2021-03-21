@@ -1,5 +1,6 @@
 package org.gorany.community.service;
 
+import org.gorany.community.dto.ProfileDTO;
 import org.gorany.community.dto.ReplyDTO;
 import org.gorany.community.entity.Board;
 import org.gorany.community.entity.Reply;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface ReplyService {
 
     int register(ReplyDTO replyDTO);
-    List<ReplyDTO> getList(int bno);
+    List<Object[]> getList(int bno);
     void modify(ReplyDTO replyDTO);
     void remove(int rno);
 

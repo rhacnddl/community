@@ -278,8 +278,15 @@
 
                             $(".replyCount").html(" Reply Count " + result.length);
 
-                            $.each(result, (idx, reply) => {
-                                console.log(reply);
+                            $.each(result, (idx, obj) => {
+                                console.log(obj[0]);
+                                console.log(obj[1]);
+
+                                let reply = obj[0];
+                                let profileURL = "/img/attach.png";
+
+                                if(obj[1] != null)
+                                    profileURL = `/display?fileName=${obj[1].thumbnailURL}`;
 
                                 let writer;
                                 if(reply.anonymous)
@@ -289,7 +296,7 @@
 
                                 str += `<div class="card-body" data-rno="${reply.rno}"><b>${reply.rno}</b>
                                         <h5 class="card-title">${reply.text}</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">${writer}</h6>
+                                        <h6 class="card-subtitle mb-2 text-muted"><img style="height: 50px; width: 60px; border-radius: 50%" src="${profileURL}">${writer}</h6>
                                         <p class="card-text">${formatTime(reply.regDate)}</p>
                                         </div>`;
                             })

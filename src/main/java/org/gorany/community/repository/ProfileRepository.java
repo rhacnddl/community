@@ -16,4 +16,7 @@ public interface ProfileRepository extends JpaRepository<Profile, String> {
 
     @Query("SELECT P FROM Profile P WHERE P.member = :member")
     Optional<Profile> findByMember(Member member);
+
+    @Query("SELECT P FROM Profile P WHERE P.member.account = :account")
+    Optional<Profile> findByAccount(String account);
 }

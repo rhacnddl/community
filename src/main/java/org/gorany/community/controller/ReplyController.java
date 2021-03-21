@@ -20,11 +20,13 @@ public class ReplyController {
     private final ReplyService service;
 
     @GetMapping(value = "/board/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ReplyDTO>> getList(@PathVariable("bno") int bno){
+    public ResponseEntity<List<Object[]>> getList(@PathVariable("bno") int bno){
 
         log.info("@ReplyController, getList " + bno);
 
-        return new ResponseEntity<>(service.getList(bno), HttpStatus.OK);
+        List<Object[]> list = service.getList(bno);
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     public ResponseEntity<Integer> register(@RequestBody ReplyDTO dto){
