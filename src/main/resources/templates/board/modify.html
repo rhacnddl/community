@@ -109,12 +109,12 @@
                 })*/
                 $(".removeBtn").on("click", (e) => {
 
-                    actionForm.attr("/board/remove");
-                    actionForm.submit();
+                    if(confirm("게시글을 삭제하시겠습니까?")) {
+                        actionForm.attr("action", "/board/remove");
+                        actionForm.submit();
+                    }
                 });
                 $(".cancleBtn").on("click", (e) => {
-
-
 
                     actionForm.empty();
                     actionForm.attr("action", "/board/read");

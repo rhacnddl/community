@@ -88,8 +88,8 @@ public class BoardController {
         return "redirect:/board/read";
     }
     @PostMapping(value = "/remove")
-    @PreAuthorize("#member != null && #member.username eq #boardDTO.writer")
-    public String remove(int bno, RedirectAttributes rttr,
+    @PreAuthorize("#member != null && #member.username eq #writer")
+    public String remove(int bno, String writer, RedirectAttributes rttr,
                          @AuthenticationPrincipal MemberDTO member){
 
         log.info("@BoardController, remove : " + bno);
