@@ -7,11 +7,25 @@
     html{
         height: 100%;
     }
+    a{
+        text-decoration: none;
+    }
+    a:hover{
+        color: skyblue;
+    }
+    .input-item{
+        width: 100%;
+        height: 20px;
+    }
+    .form-container{
+        width: 50%;
+    }
     body{
         background-color: #333333;
         display: flex;
         flex-direction: column;
         height: 100%;
+        margin: 0;
     }
 
     .container{
@@ -21,12 +35,12 @@
         display: flex;
         flex-basis: 500px;
         justify-content: center;
+
     }
     header{
         display: flex;
         flex-grow: 1;
         justify-content: center;
-        margin-top: -10px;
     }
         header > .container > .header-container{
             background: url("/img/guinea.png") no-repeat center;
@@ -39,7 +53,6 @@
         display: flex;
         flex-grow: 2;
         justify-content: center;
-
     }
         main > .container{
             background-color: #CCCCFF;
@@ -47,36 +60,40 @@
 
             flex-direction: column;
         }
+            main > .container > a{
+                padding: 0 5px 0 5px;
+            }
     footer{
 
         display: flex;
         flex-grow: 1;
         justify-content: center;
     }
+        .container > a{
+            padding: 0 5px 0 5px;
+        }
 </style>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="header-container">
-                <a th:href="@{/index}">
 
-                </a>
             </div>
         </div>
     </header>
 
     <main>
         <div class="container">
-            <form th:action="@{/login_post}" method="post">
+            <form th:action="@{/login_post}" method="post" class="form-container">
                 <div>
-                    <input type="text" name="username" placeholder="ID">
+                    <input type="text" name="username" placeholder="ID" class="input-item">
                 </div>
                 <div>
-                    <input type="password" name="password" placeholder="Password">
+                    <input type="password" name="password" placeholder="Password" class="input-item">
                 </div>
                 <div>
-                    <button type="submit">Login</button>
+                    <button type="submit" >Login</button>
                 </div>
                 <div>
                     <input type="checkbox" name="remember-me">
@@ -85,7 +102,7 @@
             </form>
             <nav>
                 <a href="#">ID 찾기</a> |
-                <a href="#">Password 찾기</a>
+                <a href="#">Password 찾기</a> |
                 <a href="signup">Sign Up</a>
             </nav>
         </div>
