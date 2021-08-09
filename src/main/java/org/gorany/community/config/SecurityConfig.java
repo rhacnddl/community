@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin();
 
         http.csrf().disable();
+        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/stomp/**", "/chat/**").permitAll();
 
         /*http.authorizeRequests().antMatchers("/board/**").authenticated()
                                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")

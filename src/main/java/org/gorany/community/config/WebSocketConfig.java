@@ -8,16 +8,17 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
-@EnableWebSocket
+//@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ChatHandler chatHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        /* /ws/chat Endpoint로 Handshake가 이루어짐  */
+    ///ws/chat Endpoint로 Handshake가 이루어짐
+
         registry.addHandler(chatHandler, "/ws/chat")
                 .setAllowedOrigins("http://localhost:8080")
                 .withSockJS()

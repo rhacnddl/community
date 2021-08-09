@@ -33,11 +33,13 @@
                 });
 
                 //var sockJs = new SockJS("http://localhost:8080/ws/chat");
-                var sockJs = new SockJS("http://localhost:8080/ws/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+                //var sockJs = new SockJS("http://localhost:8080/ws/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+                var sockJs = new SockJS("/ws/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
 
                 sockJs.onmessage = onMessage;
                 sockJs.onopen = onOpen;
                 sockJs.onclose = onClose;
+
 
                 function send(){
 
@@ -95,6 +97,7 @@
                         $("#msgArea").append(str);
                     }
                 }
+                sockJs.onclose();
             })
         </script>
         <!--<script th:inline="javascript">
@@ -109,7 +112,8 @@
                 send();
             });
 
-            const websocket = new WebSocket("ws://localhost:8080/ws/chat");
+            let websocket = new WebSocket("ws://localhost:8080/ws/chat");
+            //let websocket = new WebSocket("ws://192.168.219.103:8080/ws/chat");
 
             websocket.onmessage = onMessage;
             websocket.onopen = onOpen;

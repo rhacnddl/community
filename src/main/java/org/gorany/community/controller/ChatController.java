@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
+/*@Controller
 @Log4j2
 @PreAuthorize("isAuthenticated()")
 public class ChatController {
@@ -18,4 +18,4 @@ public class ChatController {
 
         log.info("@ChatController, chat GET()");
     }
-}
+}*/
